@@ -1,0 +1,18 @@
+
+daniel
+1.- Las tablas se crean desde python
+
+
+ale
+2.- Indices
+  Producto_nombres
+  cliente_email
+  pedidos_fechapedido
+
+luis
+3.- vistas
+    vistaClientePedidos
+4.- Procedimiento almacenado con transaccion
+    Registrar pedido
+5.- Disparador  
+    Disparador auditoria productos
