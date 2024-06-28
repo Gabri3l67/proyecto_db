@@ -16,6 +16,10 @@
 
 `python manage.py runserver 3080`
 
+# Create admin user
+
+`python manage.py createsuperuser`
+
 # Tasks
 
 ## Daniel
