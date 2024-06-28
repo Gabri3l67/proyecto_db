@@ -4,14 +4,17 @@ from django.db import models
 
 class Productos(models.Model):
     name = models.CharField(max_length=255, null=False)
+    price = models.DecimalField(max_digits=16,decimal_places=2)
+    image_url = models.TextField(max_length=1024, null=True)
+    stock = models.IntegerField(db_default=0)
 
-# class Clientes(models.Model):
+# class Cliente(models.Model):
 #     pass
 
-# class Pedidos(models.Model):
+# class Pedido(models.Model):
 #     pass
 
-# class PedidoDetalles(models.Model):
+# class PedidoDetalle(models.Model):
 #     pass
 
 # class Auditoria(models.Model):
