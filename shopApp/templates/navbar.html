@@ -1,1 +1,14 @@
-<h1>Esto es una navbar</h1>
+<nav class="flex justify-between">
+    <a href="{% url 'index' %}">
+        Tienda en linea
+    </a>
+    <a href="{% url 'profile' %}">
+        Perfil
+    </a>
+    <a href="{% url 'login' %}">
+        Iniciar sesion
+    </a>
+    <a href="{% url 'register' %}">
+        Registrarte
+    </a>
+</nav>
