@@ -51,3 +51,39 @@ def login_user(request):
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
+
+
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    session_id = request.session.session_key
+    if not session_id:
+        request.session.create()
+        session_id = request.session.session_key
+    
+    cart_item, created = ShoppingCart.objects.get_or_create(session_id=session_id, product_id=str(product.id))
+    cart_item.amount += 1
+    cart_item.save()
+    return redirect('view_cart')
+def view_cart(request):
+    session_id = request.session.session_key
+    if not session_id:
+        request.session.create()
+        session_id = request.session.session_key
+
+    print(f"Session ID: {session_id}")  # Debugging statement
+
+    if session_id is None:
+        return HttpResponse("Session ID is None")
+
+    try:
+        cart_items = ShoppingCart.objects.filter(session_id=session_id)
+        print(f"Cart items: {cart_items}")  # Debugging statement
+    except Exception as e:
+        return HttpResponse(f"Error: {e}")
+
+    if not cart_items.exists():
+        return HttpResponse("No items in cart")
+
+    products = {item.product_id: get_object_or_404(Product, pk=item.product_id) for item in cart_items}
+    total_price = sum(products[item.product_id].price * item.amount for item in cart_items)
+    return render(request, 'shoppingcar.html', {'cart_items': cart_items, 'products': products, 'total_price': total_price})

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h1 class="text-7xl font-bold">Carrito de Compras</h1>
+    <ul>
+        {% for item in cart_items %}
+            <li>
+                {{ products[item.product_id].name }} - {{ item.amount }} x ${{ products[item.product_id].price }}
+                <strong>Total: ${{ item.amount|multiply:products[item.product_id].price }}</strong>
+            </li>
+        {% endfor %}
+    </ul>
+    <strong>Total del carrito: ${{ total_price }}</strong>
+</div>
+{% endblock %}
