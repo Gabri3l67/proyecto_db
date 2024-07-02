@@ -8,6 +8,12 @@ class Productos(models.Model):
     image_url = models.TextField(max_length=1024, null=True)
     stock = models.IntegerField(db_default=0)
 
+
+class ShoppingCart(models.Model):
+    session_id = models.CharField(max_length=255, null=False)
+    product_id = models.CharField(max_length=255, null=False)  # Assuming product_id is a string
+    amount = models.IntegerField(default=0)
+
 # class Cliente(models.Model):
 #     pass
 
