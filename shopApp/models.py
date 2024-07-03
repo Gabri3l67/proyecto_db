@@ -21,11 +21,18 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=255, null=False)
     address = models.CharField(max_length=255)
 
-# class Pedido(models.Model):
-#     pass
+# Pedido
+class Order(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    customer_id = models.ForeignKey(User, on_delete=models.CASCADE, default=0)
+    total = models.DecimalField(max_digits=16, decimal_places=2, default=0)
 
-# class PedidoDetalle(models.Model):
-#     pass
+#PedidoDetalle
+class OrderDetail(models.Model):
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE, default=0)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, default=0)
+    quantity = models.IntegerField(default=0)
+
 
 # class Auditoria(models.Model):
 #     pass
