@@ -93,6 +93,12 @@ def view_cart(request):
     if not cart_items.exists():
         return HttpResponse("No items in cart")
 
-    products = {item.product_id: get_object_or_404(Product, pk=item.product_id) for item in cart_items}
-    total_price = sum(products[item.product_id].price * item.amount for item in cart_items)
+    products = []
+    total_price = 0
+
+    for item in cart_items:
+        prod = Product.objects.get(id=item.product_id)
+        products.append(prod)
+        total_price = total_price + prod.price
+
     return render(request, 'shoppingcar.html', {'cart_items': cart_items, 'products': products, 'total_price': total_price})
