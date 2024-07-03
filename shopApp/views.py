@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login
-from .models import Product
+from .models import Product, ShoppingCart
 from .forms import UserRegistrationForm, LoginForm
 from django.contrib.admin.views.decorators import staff_member_required
 # Create your views here.
@@ -72,6 +72,7 @@ def add_to_cart(request, product_id):
     cart_item.amount += 1
     cart_item.save()
     return redirect('view_cart')
+
 def view_cart(request):
     session_id = request.session.session_key
     if not session_id:
