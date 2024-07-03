@@ -12,6 +12,7 @@ class Product(models.Model):
 
 class ShoppingCart(models.Model):
     session_id = models.CharField(max_length=255, null=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE ,null=True)
     product_id = models.CharField(max_length=255, null=False)  # Assuming product_id is a string
     amount = models.IntegerField(default=0)
 
