@@ -8,10 +8,13 @@
            <div>
                {{ product.name }}
                ${{ product.price }}
+               {{ product.amount}}
+               <button>+</button>
+               <button>-</button>
             </div> 
         {% endfor %}
     </ul>
     <strong>Total del carrito: ${{ total_price }}</strong>
-    <button>Finalizar compra</button>
+    <a href="{% url 'buy_cart' %}">Finalizar compra</a>
 </div>
 {% endblock %}

@@ -5,8 +5,11 @@
 <div>
     <h1 class="text-7xl font-bold">Ola toads</h1>
     {% for product in productos %}
-        <li> {{ product.name }}</li>
-    {% endfor %}
+        <div>
+            <li> {{ product.name }}</li>
+            <a href="{% url 'add_to_cart' product.id %}"> Add </a>
+        </div>
+            {% endfor %}
 </div>
 
 {% endblock %}

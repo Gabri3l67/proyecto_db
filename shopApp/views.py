@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login
-from .models import Product, ShoppingCart
+from .models import Product, ShoppingCart, Order, OrderDetail
 from .forms import UserRegistrationForm, LoginForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sessions.models import Session
@@ -76,8 +76,12 @@ def add_to_cart(request, product_id):
     if not session_id:
         request.session.create()
         session_id = request.session.session_key
-    
-    cart_item, created = ShoppingCart.objects.get_or_create(session_id=session_id, product_id=str(product.id))
+        
+    if request.user.is_authenticated:
+        cart_item, created = ShoppingCart.objects.get_or_create(user=request.user, product_id=str(product.id))
+    else:
+        cart_item, created = ShoppingCart.objects.get_or_create(session_id=session_id, product_id=str(product.id))   
+
     cart_item.amount += 1
     cart_item.save()
     return redirect('view_cart')
@@ -111,38 +115,58 @@ def view_cart(request):
 
     for item in cart_items:
         prod = Product.objects.get(id=item.product_id)
-        products.append(prod)
+        # products.append(prod)
+        prod_data = {
+            'name': prod.name,
+            'price': prod.price,
+            'amount': item.amount
+        }
+        
+        products.append(prod_data)
         total_price = total_price + prod.price
 
+    print(len(products))
     return render(request, 'shoppingcar.html', {'cart_items': cart_items, 'products': products, 'total_price': total_price})
 
 
 # AI GENERATED, NOT CHECKED YET
-""" def buy_cart(request):
+def buy_cart(request):
 # If user is not authenticated
     if not request.user.is_authenticated:
         return redirect('register')  # Redirect to registration page
 
     session_id = request.session.session_key
-    cart_items = ShoppingCart.objects.filter(session_id=session_id)
-
+    # cart_items = ShoppingCart.objects.filter(session_id=session_id)
+    
+    if request.user.is_authenticated:
+            print('find shopping cart with user id')
+            cart_items = ShoppingCart.objects.filter(user=request.user)
+    
     if not cart_items.exists():
         return HttpResponse("No items in cart")
-
-    total_price = 0
-
-    for item in cart_items:
-        prod = Product.objects.get(id=item.product_id)
-        total_price += prod.price
+    
+    print(len(cart_items))
+    total = 0
     # Purchase products
     for item in cart_items:
         prod = Product.objects.get(id=item.product_id)
-        prod.quantity -= 1
-        if prod.quantity == 0:
-            prod.delete()
-        else:
+        if prod.stock >= item.amount:
+            prod.stock -= 1
             prod.save()
-
+            total = total + prod.price
+        else:
+            return redirect('view_cart')
+            return HttpResponse(f'Product {prod.name} has {prod.stock} stock and you wanted to buy {item.amount}')
         item.delete()  # Remove the cart item after purchase
-
-    return render(request, 'purchase_successful.html', {'total_price': total_price}) """
+    
+    order = Order(customer=request.user, total=total)
+    order.save()
+    
+    for item in cart_items:
+        prod = Product.objects.get(id=item.product_id)
+        order_detail = OrderDetail(order=order, product=prod, quantity=item.amount)
+        
+        order_detail.save()
+        
+    
+    return render(request, 'purchase_successful.html', {'total_price': total})
