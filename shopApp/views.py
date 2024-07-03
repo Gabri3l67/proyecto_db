@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from .models import Product, ShoppingCart, Order, OrderDetail
 from .forms import UserRegistrationForm, LoginForm
 from django.contrib.admin.views.decorators import staff_member_required
@@ -27,7 +28,20 @@ def product(request, product_id):
     return render(request, "product.html", {"product": get_product})
 
 def profile(request):
-    return HttpResponse(request.session.session_key)
+    if request.user.is_authenticated:
+        user = User.objects.get(pk=request.user.id)
+        print(user.email)
+        
+        user_data = {
+            'email': user.email,
+            'username': user.username,
+            'name': user.first_name,
+            'last_name': user.last_name
+        }
+
+        return render(request, 'profile.html', {'profile': user_data })
+    # r:eturn HttpResponse(request.session.session_key)
+    return render(request, 'profile.html')
 
 def register(request):
     if request.method == 'POST':
@@ -69,6 +83,10 @@ def login_user(request):
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
+def logout_view(request):
+    logout(request)
+    return redirect('index') 
+    
 
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -106,9 +124,9 @@ def view_cart(request):
             print(f"Cart items: {cart_items}")  # Debugging statement
     except Exception as e:
         return HttpResponse(f"Error: {e}")
-
+    """ 
     if not cart_items.exists():
-        return HttpResponse("No items in cart")
+        return HttpResponse("No items in cart") """
 
     products = []
     total_price = 0

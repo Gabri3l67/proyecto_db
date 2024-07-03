@@ -14,8 +14,12 @@
                {{ product.amount}}
                <button>-</button>
             </div> 
+        {% empty %}
+            No hay productos en tu carrito
         {% endfor %}
     </div>
+    
+    {% if products %}
     <strong>Total : ${{ total_price }}</strong>
     <div>
         <a href="{% url 'buy_cart' %}">
@@ -24,5 +28,6 @@
             </button>
         </a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
