@@ -1,20 +1,28 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div>
-    <h1 class="text-7xl font-bold">Carrito de Compras</h1>
-    <ul>
+<div class="">
+    <h1 class="text-5xl font-bold">Carrito de Compras</h1>
+    <div class="divide-y">
         {% for product in products %}
-           <div>
-               {{ product.name }}
+           <div class="my-4 py-2 divide-x">
+               <h2 class="font-bold text-2xl">
+                   {{ product.name }}
+               </h2>
                ${{ product.price }}
-               {{ product.amount}}
                <button>+</button>
+               {{ product.amount}}
                <button>-</button>
             </div> 
         {% endfor %}
-    </ul>
-    <strong>Total del carrito: ${{ total_price }}</strong>
-    <a href="{% url 'buy_cart' %}">Finalizar compra</a>
+    </div>
+    <strong>Total : ${{ total_price }}</strong>
+    <div>
+        <a href="{% url 'buy_cart' %}">
+            <button class="rounded-md bg-green-500 p-2 text-white font-semibold hover:bg-green-700 transition">
+                Finalizar compra
+            </button>
+        </a>
+    </div>
 </div>
 {% endblock %}
