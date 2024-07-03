@@ -1,18 +1,14 @@
 <nav class="flex justify-between">
-    <a href="{% url 'index' %}">
-        Tienda en linea
-    </a>
-    <a href="{% url 'profile' %}">
-        Perfil
-    </a>
-    <a href="{% url 'login' %}">
-        Iniciar sesion
-    </a>
-    <a href="{% url 'register' %}">
-        Registrarte
-    </a>
-    
-    <a href="{% url 'view_cart' %}">
-        Carrito
-    </a>
+  <a href="{% url 'index' %}">Inicio</a>
+
+  {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}">Perfil</a>
+  {% endif %}
+  
+  {% if not user.is_authenticated %}
+    <a href="{% url 'login' %}">Iniciar sesion</a>
+    <a href="{% url 'register' %}">Registrarte</a>
+  {% endif %}
+
+  <a href="{% url 'view_cart' %}">Carrito</a>
 </nav>
