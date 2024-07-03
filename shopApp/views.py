@@ -1,18 +1,26 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login
-from .models import Productos
+from .models import Product
 from .forms import UserRegistrationForm, LoginForm
+from django.contrib.admin.views.decorators import staff_member_required
 # Create your views here.
 
+@staff_member_required
+def my_custom_viewer(request):
+    context = {
+        'title': 'my custom admin page'
+    }
+    return render(request, 'admin/my_custom_template.html', context)
+
 def index(request):
-    productos = Productos.objects.all()
-    return  render(request, 'home.html', {'productos': productos}) 
+    product_list = Product.objects.all()
+    return  render(request, 'home.html', {'productos': product_list}) 
 
 def product(request, product_id):
     try:
-        get_product = Productos.objects.get(pk=product_id)
-    except Productos.DoesNotExist:
+        get_product = Product.objects.get(pk=product_id)
+    except Product.DoesNotExist:
         raise Http404("Product does not exist")
     return render(request, "product.html", {"product": get_product})
 
