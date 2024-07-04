@@ -1,5 +1,6 @@
 from django.db import models 
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -8,6 +9,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=16,decimal_places=2)
     image_url = models.TextField(max_length=1024, null=True)
     stock = models.IntegerField(db_default=0)
+    description = RichTextField()
 
 
 class ShoppingCart(models.Model):

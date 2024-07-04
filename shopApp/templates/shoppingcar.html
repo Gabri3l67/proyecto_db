@@ -1,33 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="">
-    <h1 class="text-5xl font-bold">Carrito de Compras</h1>
-    <div class="divide-y">
-        {% for product in products %}
-           <div class="my-4 py-2 divide-x">
-               <h2 class="font-bold text-2xl">
-                   {{ product.name }}
-               </h2>
-               ${{ product.price }}
-               <button>+</button>
-               {{ product.amount}}
-               <button>-</button>
-            </div> 
-        {% empty %}
-            No hay productos en tu carrito
-        {% endfor %}
+  <h1 class="text-5xl font-bold">Carrito de Compras</h1>
+  <div class="flex w-full">
+    <div class="w-8/12 mx-6" id="product-list">
+      {% for product in products %}
+        <div class="my-4 py-2 flex">
+          <img class="h-20 object-contain" src="{{ product.image_url }}" alt="" />
+          <div class="flex justify-between w-full">
+            <div class="">
+              <a href="{% url 'product' product.id %}" class="font-bold text-2xl hover:underline">{{ product.name }}</a>
+              <button>+</button>
+              {{ product.amount }}
+              <button>-</button>
+            </div>
+            <p>${{ product.price }}</p>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-4xl">No hay productos en tu carrito.</p>
+        <div class="mt-4">
+          <a class="text-2xl rounded-md bg-blue-500 py-2 px-5 text-white hover:bg-blue-400 transition" href="">Iniciar sesión</a>
+          <a class="text-2xl rounded-md bg-gray-100 py-2 px-5 hover:bg-gray-50 transition" href="">Ver más productos</a>
+        </div>
+      {% endfor %}
     </div>
-    
+
     {% if products %}
-    <strong>Total : ${{ total_price }}</strong>
-    <div>
-        <a href="{% url 'buy_cart' %}">
-            <button class="rounded-md bg-green-500 p-2 text-white font-semibold hover:bg-green-700 transition">
-                Finalizar compra
-            </button>
-        </a>
-    </div>
+      <div class="bg-gray-50 rounded-lg p-4 w-4/12 h-fit">
+          <p>
+            articulos: {{ products|length}} ${{ total_price }}
+          </p>
+          <p>envío: $199.00</p>
+        <strong>Total : ${{ total_price|add:199 }}</strong>
+        <div>
+          <a href="{% url 'buy_cart' %}"><button class="w-full rounded-md bg-green-500 p-2 text-white font-semibold hover:bg-green-700 transition">Finalizar compra</button></a>
+        </div>
+      </div>
     {% endif %}
-</div>
+  </div>
 {% endblock %}

@@ -1,8 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="text-7xl">Welcome to product Page</h1>
-  {{ product.name }}
-  {{ product.price }}
-  {{ product.stock }}
+  <div class="flex bg-gray-50 p-4">
+    <div class="w-5/12"  >
+      <img class="object-contain rounded-lg" src="{{ product.image_url }}" alt="" />
+    </div>
+    <div class="px-4 w-7/12">
+      <h1 class="text-7xl">{{ product.name }}</h1>
+      <div>
+        
+        <div>
+          <span class="font-semibold text-2xl">
+            ${{ product.price }} 
+          </span>Hasta 18 MSI
+          <div class="text-gray-500">unidades: 
+            {{ product.stock }}
+          </div>
+          <div>
+            Calcular fecha de entrega
+          </div>
+        </div>
+        <div>
+          Envío: $139.00
+        </div>
+        <button type="submit" class="bg-blue-400 p-4 rounded-lg text-white font-semibold w-full hover:bg-blue-300 transition">Comprar</button>
+      </div>
+    </div>
+  </div> 
+  <div class="px-24">{{ product.description|safe }}</div>
 {% endblock %}

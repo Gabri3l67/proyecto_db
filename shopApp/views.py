@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpRequest
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import Product, ShoppingCart, Order, OrderDetail
@@ -17,7 +17,7 @@ def my_custom_viewer(request):
     return render(request, 'admin/my_custom_template.html', context)
 
 def index(request):
-    product_list = Product.objects.all()
+    product_list = Product.objects.filter(stock__gt=0)
     return  render(request, 'home.html', {'productos': product_list}) 
 
 def product(request, product_id):
@@ -43,7 +43,7 @@ def profile(request):
     # r:eturn HttpResponse(request.session.session_key)
     return render(request, 'profile.html')
 
-def register(request):
+def register(request: HttpRequest):
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -66,7 +66,7 @@ def register(request):
         form = UserRegistrationForm()
     return render(request, 'register.html', { 'form' : form})
 
-def login_user(request):
+def login_user(request: HttpRequest):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -88,21 +88,24 @@ def logout_view(request):
     return redirect('index') 
     
 
-def add_to_cart(request, product_id):
+def add_to_cart(request: HttpRequest, product_id):
     product = get_object_or_404(Product, id=product_id)
-    session_id = request.session.session_key
-    if not session_id:
-        request.session.create()
+   
+    if request.POST:
+        print('this was a post')
+    
         session_id = request.session.session_key
-        
-    if request.user.is_authenticated:
-        cart_item, created = ShoppingCart.objects.get_or_create(user=request.user, product_id=str(product.id))
-    else:
-        cart_item, created = ShoppingCart.objects.get_or_create(session_id=session_id, product_id=str(product.id))   
-
-    cart_item.amount += 1
-    cart_item.save()
-    return redirect('view_cart')
+        if not session_id:
+            request.session.create()
+            session_id = request.session.session_key
+            
+        if request.user.is_authenticated:
+            cart_item, created = ShoppingCart.objects.get_or_create(user=request.user, product_id=str(product.id))
+        else:
+            cart_item, created = ShoppingCart.objects.get_or_create(session_id=session_id, product_id=str(product.id))   
+        cart_item.amount += 1
+        cart_item.save()
+        return redirect('view_cart')
 
 def view_cart(request):
     session_id = request.session.session_key
@@ -137,7 +140,9 @@ def view_cart(request):
         prod_data = {
             'name': prod.name,
             'price': prod.price,
-            'amount': item.amount
+            'amount': item.amount,
+            'id': item.product_id,
+            'image_url': prod.image_url
         }
         
         products.append(prod_data)
