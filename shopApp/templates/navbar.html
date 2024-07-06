@@ -1,9 +1,24 @@
 <nav class="flex justify-evenly bg-gray-100 py-4 text-blue-600 ">
-  <a class="hover:underline" href="{% url 'index' %}">Inicio</a>
+  <a class="hover:underline flex flex-col items-center" href="{% url 'index' %}">
+    <div>
+      {% include "icons/home.html" %}
+    </div>
+    <p>inicio</p>
+  </a>
 
   {% if user.is_authenticated %}
-    <a class="hover:underline" href="{% url 'profile' %}">Perfil</a>
-    <a class="hover:underline" href="{% url 'logout' %}" > Cerrar sesión </a>
+    <a class="hover:underline flex flex-col items-center" href="{% url 'profile' %}">
+      <div>
+        {% include "icons/user.html" %}
+      </div>
+      <p>perfil</p>
+    </a>
+    <a class="hover:underline flex flex-col items-center" href="{% url 'logout' %}" > 
+      <div>
+        {% include "icons/exit.html" %}
+      </div>
+      <p>Salir</p>
+    </a>
   {% endif %}
   
   {% if not user.is_authenticated %}
@@ -11,5 +26,12 @@
     <a class="hover:underline" href="{% url 'register' %}">Registrarte</a>
   {% endif %}
 
-  <a class="hover:underline" href="{% url 'view_cart' %}">Carrito</a>
+  <a class="hover:underline flex flex-col items-center" href="{% url 'view_cart' %}">
+    <div>
+      {% include "cart_icon.html" %}
+    </div>
+    <p>
+      carrito
+    </p>
+  </a>
 </nav>

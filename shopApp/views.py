@@ -86,7 +86,19 @@ def login_user(request: HttpRequest):
 def logout_view(request):
     logout(request)
     return redirect('index') 
-    
+
+def remove_product_cart(request: HttpRequest, product_id):
+    if request.POST:
+        if request.user.is_authenticated:
+            # product = get_object_or_404(Product, id=product_id)    
+            cart_item = ShoppingCart.objects.filter(user=request.user, product_id=str(product_id))
+            cart_item.delete()
+            print(cart_item)
+        else:
+            cart_item = ShoppingCart.objects.filter(session_id=request.session.session_key, product_id=str(product_id))
+            cart_item.delete()
+    return redirect('view_cart')
+        
 
 def add_to_cart(request: HttpRequest, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -103,9 +115,48 @@ def add_to_cart(request: HttpRequest, product_id):
             cart_item, created = ShoppingCart.objects.get_or_create(user=request.user, product_id=str(product.id))
         else:
             cart_item, created = ShoppingCart.objects.get_or_create(session_id=session_id, product_id=str(product.id))   
-        cart_item.amount += 1
-        cart_item.save()
+            
+        if product.stock > cart_item.amount:
+            cart_item.amount += 1
+            cart_item.save()
         return redirect('view_cart')
+
+# Badcode, probably
+def decrease_cart_product(request: HttpRequest, product_id):
+    if request.POST:
+        if request.user.is_authenticated:
+            cart_item = ShoppingCart.objects.filter(user=request.user, product_id=str(product_id)).first()
+            if cart_item.amount - 1 < 1:
+                cart_item.delete()
+            else:
+                cart_item.amount = cart_item.amount - 1
+                cart_item.save()
+        else:
+            cart_item = ShoppingCart.objects.filter(session_id=request.session.session_key, product_id=str(product_id))
+            if cart_item.amount - 1 < 1:
+                cart_item.delete()
+            else:
+                cart_item.amount = cart_item.amount - 1
+                cart_item.save() 
+
+    return redirect('view_cart')
+
+# # This could be easily the same function as add_to_cart
+# def cart_increase(request: HttpRequest, product_id):
+#     product = get_object_or_404(Product, id=product_id)
+#     if request.POST:
+#         session_id = request.session.session_key
+        
+#         if not session_id:
+#             request.session.create()
+#             session_id = request.session.session_key
+        
+#         if request.user.is_authenticated:
+#             cart_item, created = ShoppingCart.objects.get_or_create(user=request.user, product_id=str(product_id.id))
+#         else:
+#             cart_item, created = ShoppingCart.objects.get_or_create(session_id=session_id, product_id=str(product.id))
+     
+    
 
 def view_cart(request):
     session_id = request.session.session_key
@@ -133,6 +184,7 @@ def view_cart(request):
 
     products = []
     total_price = 0
+    item_count = 0
 
     for item in cart_items:
         prod = Product.objects.get(id=item.product_id)
@@ -142,14 +194,16 @@ def view_cart(request):
             'price': prod.price,
             'amount': item.amount,
             'id': item.product_id,
-            'image_url': prod.image_url
+            'image_url': prod.image_url,
+            'total': prod.price * item.amount
         }
         
         products.append(prod_data)
-        total_price = total_price + prod.price
+        total_price = total_price + (prod.price * item.amount)
+        item_count = item_count + item.amount
 
     print(len(products))
-    return render(request, 'shoppingcar.html', {'cart_items': cart_items, 'products': products, 'total_price': total_price})
+    return render(request, 'shoppingcar.html', {'cart_items': cart_items, 'products': products, 'total_price': total_price, 'item_count': item_count})
 
 
 # AI GENERATED, NOT CHECKED YET
