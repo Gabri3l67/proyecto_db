@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="flex bg-gray-50 p-4">
-    <div class="w-5/12">
+  <div class="md:flex bg-gray-50 p-4">
+    <div class="md:w-5/12">
       <img class="object-contain rounded-lg w-full" src="{{ product.image_url }}" alt="" />
     </div>
-    <div class="px-4 w-7/12">
+    <div class="md:px-4 md:w-7/12">
       <h1 class="text-4xl">{{ product.name }}</h1>
       <div>
         <div class="mb-6">

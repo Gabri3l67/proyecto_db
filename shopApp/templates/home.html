@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="grid grid-cols-4 gap-4">
+  <div class="grid grid-cols-2 md:grid-cols-4 md:gap-4 gap-2 px-2">
     {% for product in productos %}
-      <a href="{% url 'product' product.id %}" class="w-64 m-4 content-end px-2 py-2 rounded-md hover:ring hover:scale-105 transition">
+      <a href="{% url 'product' product.id %}" class="md:w-64 md:m-4 content-end md:px-2 py-2 rounded-md hover:ring hover:scale-105 transition">
         <img class="h-56 object-contain" src="{{ product.image_url }}" alt="" />
         <p class="mb-2 hover:underline hover:text-sky-400 font-semibold text-xl">{{ product.name }}</p>
         <p>${{ product.price }}</p>
