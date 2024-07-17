@@ -4,6 +4,15 @@ from django.contrib import admin
 
 from .models import Product,Customer,Order, OrderDetail
 
+class ProductInline(admin.TabularInline):
+    model = OrderDetail
+    extra = 0
+    
+    def product_name(self, instance):
+        return instance.product.name
+
+    readonly_fields = ['product_name']
+    fields = ('product_name', 'quantity')
 
 class ProductAdmin(admin.ModelAdmin):
     fields = [('name', 'price', 'stock', 'image_url', 'description')]
@@ -12,10 +21,11 @@ class ProductAdmin(admin.ModelAdmin):
     list_display_links = ('name', 'image_url')
     
 class OrderAdmin(admin.ModelAdmin):
+    inlines = [ProductInline]
+    readonly_fields=['customer', 'total']
     list_display = ('id', 'date', 'customer_id', 'total')
 
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Customer)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderDetail)
