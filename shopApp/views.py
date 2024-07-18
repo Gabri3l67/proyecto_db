@@ -132,7 +132,7 @@ def decrease_cart_product(request: HttpRequest, product_id):
                 cart_item.amount = cart_item.amount - 1
                 cart_item.save()
         else:
-            cart_item = ShoppingCart.objects.filter(session_id=request.session.session_key, product_id=str(product_id))
+            cart_item = ShoppingCart.objects.filter(session_id=request.session.session_key, product_id=str(product_id)).first()
             if cart_item.amount - 1 < 1:
                 cart_item.delete()
             else:
