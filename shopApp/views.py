@@ -6,6 +6,17 @@ from .models import Product, ShoppingCart, Order, OrderDetail
 from .forms import UserRegistrationForm, LoginForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sessions.models import Session
+import time
+
+def create_category_list(product: Product):
+    categories = []
+    category = product.category
+
+    while(category):
+        categories.append(category.name)
+        category = category.parent
+    
+    return categories
 
 # Create your views here.
 
@@ -23,9 +34,11 @@ def index(request):
 def product(request, product_id):
     try:
         get_product = Product.objects.get(pk=product_id)
+        categories = create_category_list(product=get_product)
+        categories = list(reversed(categories))
     except Product.DoesNotExist:
         raise Http404("Product does not exist")
-    return render(request, "product.html", {"product": get_product})
+    return render(request, "product.html", {"product": get_product, "categories": categories})
 
 def profile(request):
     if request.user.is_authenticated:

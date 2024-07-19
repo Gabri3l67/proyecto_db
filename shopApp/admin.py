@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Product,Customer,Order, OrderDetail
+from .models import Product,Customer,Order, OrderDetail, Category
 
 class ProductInline(admin.TabularInline):
     model = OrderDetail
@@ -15,8 +15,8 @@ class ProductInline(admin.TabularInline):
     fields = ('product_name', 'quantity')
 
 class ProductAdmin(admin.ModelAdmin):
-    fields = [('name', 'price', 'stock', 'image_url', 'description')]
-    list_display = ('name', 'description','image_url', 'price', 'stock')
+    fields = [('name', 'price', 'stock', 'image_url', 'description', 'category')]
+    list_display = ('name', 'description','image_url', 'price', 'stock', 'category')
     list_editable = ('price', 'stock')
     list_display_links = ('name', 'image_url')
     
@@ -25,7 +25,11 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields=['customer', 'total']
     list_display = ('id', 'date', 'customer_id', 'total')
 
+class CategoryAdmin(admin.ModelAdmin):
+    fields = [('name', 'parent')]
+    list_display = ('name',)
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Customer)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(Category, CategoryAdmin)
