@@ -32,10 +32,12 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=255, null=False)
     price = models.DecimalField(max_digits=16,decimal_places=2)
-    image_url = models.TextField(max_length=1024, null=True)
     stock = models.IntegerField(db_default=0)
     description = RichTextField()
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name
 
 #PedidoDetalle
 class OrderDetail(models.Model):
@@ -43,6 +45,9 @@ class OrderDetail(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, default=0)
     quantity = models.IntegerField(default=0)
     
-
+class Image(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    url = models.URLField(max_length=1023)
+    
 # class Auditoria(models.Model):
 #     pass

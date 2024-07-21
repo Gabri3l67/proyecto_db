@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
   <div class="flex py-2">
-
     {% for cat in categories %}
-    <a href="/categories/{{cat}}" class="mx-1 hover:text-blue-600 hover:underline">
-      {{ cat }} >
-    </a>
-    
+      <a href="/categories/{{ cat }}" class="mx-1 hover:text-blue-600 hover:underline">{{ cat }} ></a>
     {% endfor %}
   </div>
 
-  <div class="bg-gray-50 p-4">
+  <div class="bg-gray-200 p-4">
     <div class="md:flex">
-      <div class="md:w-5/12">
-        <img class="object-contain rounded-lg w-full" src="{{ product.image_url }}" alt="" />
+      <div class="md:w-5/12 relative">
+        <button onclick="prevButton()" id="prevButton" class="z-10 absolute mx-2 px-2 left-0 top-1/2 bg-blue-300 rounded-full">x</button>
+        <button onclick="nextButton()" id="nextButton" class="z-10 absolute mx-2 px-2 right-0 top-1/2 bg-blue-300 rounded-full">x</button>
+        <div id="image-list" class="snap-x scroll-smooth overflow-x-auto flex w-full">
+          {% for image in images %}
+            <img class="snap-center transition transform" src="{{ image.url }}" alt="" />
+          {% endfor %}
+        </div>
       </div>
+      {% for image in images %}
+        .
+      {% endfor %}
       <div class="md:px-4 md:w-7/12">
         <h1 class="md:text-2xl">{{ product.name }}</h1>
         <div>
@@ -32,4 +36,16 @@
     </div>
     <div class="md:px-24">{{ product.description|safe }}</div>
   </div>
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    function nextButton() {
+      document.getElementById('image-list').scrollLeft += 380
+    }
+    
+    function prevButton() {
+      document.getElementById('image-list').scrollLeft -= 380
+    }
+  </script>
 {% endblock %}
