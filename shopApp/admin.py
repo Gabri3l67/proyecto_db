@@ -16,7 +16,7 @@ class ProductInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     fields = [('name', 'price', 'stock', 'image_url', 'description', 'category')]
-    list_display = ('name', 'description','image_url', 'price', 'stock', 'category')
+    list_display = ('name', 'image_url', 'price', 'stock', 'category')
     list_editable = ('price', 'stock')
     list_display_links = ('name', 'image_url')
     

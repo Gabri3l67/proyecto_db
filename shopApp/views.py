@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpRequest
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import Product, ShoppingCart, Order, OrderDetail
 from .forms import UserRegistrationForm, LoginForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sessions.models import Session
 import time
+from .models import Product, ShoppingCart, Order, OrderDetail, Category
 
 def create_category_list(product: Product):
     categories = []
@@ -168,9 +168,7 @@ def decrease_cart_product(request: HttpRequest, product_id):
 #             cart_item, created = ShoppingCart.objects.get_or_create(user=request.user, product_id=str(product_id.id))
 #         else:
 #             cart_item, created = ShoppingCart.objects.get_or_create(session_id=session_id, product_id=str(product.id))
-     
     
-
 def view_cart(request):
     session_id = request.session.session_key
     if not session_id:
@@ -215,7 +213,6 @@ def view_cart(request):
         total_price = total_price + (prod.price * item.amount)
         item_count = item_count + item.amount
 
-    print(len(products))
     return render(request, 'shoppingcar.html', {'cart_items': cart_items, 'products': products, 'total_price': total_price, 'item_count': item_count})
 
 
@@ -255,8 +252,15 @@ def buy_cart(request):
     for item in cart_items:
         prod = Product.objects.get(id=item.product_id)
         order_detail = OrderDetail(order=order, product=prod, quantity=item.amount)
-        
         order_detail.save()
-        
     
     return render(request, 'purchase_successful.html', {'total_price': total})
+
+def category(request, category):
+    if len(category) == 0:
+        # Link to all categories
+        return render(request, 'categories.html')
+    else:
+        cat = Category.objects.filter(name=category).first()
+        products = Product.objects.filter(category=cat.id)
+        return render(request, 'category.html', { 'products' : products, 'category': cat.name })
