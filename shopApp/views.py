@@ -29,7 +29,15 @@ def my_custom_viewer(request):
 
 
 def index(request):
+    # Get products
     product_list = Product.objects.filter(stock__gt=0)
+    
+    # Get products images
+    
+    for product in product_list:
+        image = Image.objects.filter(product=product).first()
+        print(image)
+        product.image_url = image.url
     return render(request, 'home.html', {'productos': product_list})
 
 
@@ -160,23 +168,17 @@ def view_cart(request):
         request.session.create()
         session_id = request.session.session_key
 
-    print(f"Session ID: {session_id}")  # Debugging statement
-
     if session_id is None:
         return HttpResponse("Session ID is None")
 
     try:
         if request.user.is_authenticated:
-            print('find shopping cart with user id')
             cart_items = ShoppingCart.objects.filter(user=request.user)
         else:
             cart_items = ShoppingCart.objects.filter(session_id=session_id)
-            print(f"Cart items: {cart_items}")  # Debugging statement
+
     except Exception as e:
         return HttpResponse(f"Error: {e}")
-    """ 
-    if not cart_items.exists():
-        return HttpResponse("No items in cart") """
 
     products = []
     total_price = 0
@@ -184,13 +186,12 @@ def view_cart(request):
 
     for item in cart_items:
         prod = Product.objects.get(id=item.product_id)
-        # products.append(prod)
         prod_data = {
             'name': prod.name,
             'price': prod.price,
             'amount': item.amount,
             'id': item.product_id,
-            'image_url': prod.image_url,
+            'image_url': Image.objects.filter(product=prod).first().url,
             'total': prod.price * item.amount
         }
 

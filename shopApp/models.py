@@ -49,5 +49,6 @@ class Image(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     url = models.URLField(max_length=1023)
     
+# TODO: Auditorías
 # class Auditoria(models.Model):
 #     pass
