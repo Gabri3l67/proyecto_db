@@ -32,7 +32,7 @@ class ImageInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ImageInline]
-    fields = [('name', 'price', 'stock', 'description', 'category')]
+    fields = ('name', 'category', 'price', 'stock', 'description')
     list_display = ('name', 'price', 'stock', 'category')
     list_editable = ('price', 'stock')
     list_display_links = ('name', )

@@ -13,6 +13,10 @@ RUN pip install -r requirements.txt
 # Copy the application code
 COPY . .
 
+RUN python manage.py makemigrations
+RUN python manage.py migrate
+RUN python manage.py collectstatic --noinput
+
 # Expose the port that the Django development server will use
 EXPOSE 8000
 
