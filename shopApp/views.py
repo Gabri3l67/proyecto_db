@@ -49,7 +49,7 @@ def product(request, product_id):
         categories = list(reversed(categories))
     except Product.DoesNotExist:
         raise Http404("Product does not exist")
-    return render(request, "product.html", {"product": get_product, "images": images, "categories": categories})
+    return render(request, "product.html", {"product": get_product, "images": images, "product_categories": categories})
 
 def profile(request):
     if request.user.is_authenticated:
