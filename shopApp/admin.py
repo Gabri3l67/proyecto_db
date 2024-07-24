@@ -54,6 +54,8 @@ class ProductAdmin(admin.ModelAdmin):
         return format_html('<img src="%s" class="img-fluid" style="object-fit: contain;" />' % Image.objects.filter(product=obj).first().url)
     Imagen.allow_tags = True
 
+admin.site.site_header = "Gatito tejedor"
+
 admin.site.unregister(User) # Should unregister User to modify it as is preregistered 
 admin.site.register(User, UserAdmin)
 admin.site.register(Product, ProductAdmin)

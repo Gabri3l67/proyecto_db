@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-x_h14mr^4&fqv!#8tu#ljk)vb(jw(d9yfw_9eyov((#7kh2_@=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', '192.168.1.140']
 
 
 # Application definition
@@ -143,3 +143,22 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# https://django-jazzmin.readthedocs.io/configuration/
+
+JAZZMIN_SETTINGS = {
+    "site_title" : "Gatito tejedor",
+    "site_header": "Gatito tejedor",
+    "site_administration": "Gatito tejedor",
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "shopApp.Category": "fas fa-layer-group",
+        "shopApp.Image": "fas fa-image",
+        "shopApp.Order": "fas fa-store",
+        "shopApp.Product": "fas fa-list-ul",
+    },
+
+    "site_logo": "logo256.jpg"
+}
