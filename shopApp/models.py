@@ -12,8 +12,6 @@ class ShoppingCart(models.Model):
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) 
-    name = models.CharField(max_length=255, null=False) 
-    last_name = models.CharField(max_length=255, null=False)
     address = models.CharField(max_length=255)
 
 # Pedido

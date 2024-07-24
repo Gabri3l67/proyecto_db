@@ -6,7 +6,7 @@ from .forms import UserRegistrationForm, LoginForm
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sessions.models import Session
 import time
-from .models import Product, ShoppingCart, Order, OrderDetail, Category, Image
+from .models import Product, ShoppingCart, Order, OrderDetail, Category, Image, Customer
 
 
 def create_category_list(product: Product):
@@ -76,6 +76,7 @@ def register(request: HttpRequest):
             new_user.save()
             # Log the user in and redirect to homepage
             user = authenticate(username=new_user.username,password=form.cleaned_data['password'])
+            Customer.objects.create(user=user)
 
             for item in cart_items:
                 item.user = new_user
